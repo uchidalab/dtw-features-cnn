@@ -2,6 +2,13 @@
 
 This is the repository for the replication of "Introducing Local Distance-Based Features to Temporal Convolutional Neural Networks" by B. K. Iwana, M. Mori, A. Kimura, and S. Uchida.
 
+## Table of Contents
+
+1. [Model Details](#model-details)
+2. [Requirements](#requirements)
+3. [How to Use](#how-to-use)
+4. [Citation](#citation)
+
 ## Model Details
 
 ### DTW Features
@@ -22,7 +29,7 @@ Numpy >= 1.13.3
 
 scikit-learn 0.19.1 (for test files only)
 
-## Execution
+## How to Use
 
 To train a network use:
 
