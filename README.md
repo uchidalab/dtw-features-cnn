@@ -12,13 +12,13 @@ This is the repository for the replication of "Introducing Local Distance-Based 
 ## Model Details
 
 ### DTW Features
-![alt text](https://github.com/uchidalab/dtw-features-cnn/blob/master/readme/dtwfeatures.PNG "DTW Features")
+![DTW Features](https://github.com/uchidalab/dtw-features-cnn/blob/master/readme/dtwfeatures.PNG "DTW Features")
 
 ### Network Type
-![alt text](https://github.com/uchidalab/dtw-features-cnn/blob/master/readme/multimodal.PNG "Network Types")
+![Network Types](https://github.com/uchidalab/dtw-features-cnn/blob/master/readme/multimodal.PNG "Network Types")
 
 ### Convolution Type
-![alt text](https://github.com/uchidalab/dtw-features-cnn/blob/master/readme/convolutiontype.PNG "Convolution Types")
+![Convolution Types](https://github.com/uchidalab/dtw-features-cnn/blob/master/readme/convolutiontype.PNG "Convolution Types")
 
 ## Requirements
 Python >= 3.0
