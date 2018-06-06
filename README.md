@@ -2,6 +2,17 @@
 
 This is the repository for the replication of "Introducing Local Distance-Based Features to Temporal Convolutional Neural Networks" by B. K. Iwana, M. Mori, A. Kimura, and S. Uchida.
 
+## Model Details
+
+### DTW Features
+![alt text](https://github.com/uchidalab/dtw-features-cnn/blob/master/readme/dtwfeatures.PNG "DTW Features")
+
+### Network Type
+![alt text](https://github.com/uchidalab/dtw-features-cnn/blob/master/readme/multimodal.PNG "Network Types")
+
+### Convolution Type
+![alt text](https://github.com/uchidalab/dtw-features-cnn/blob/master/readme/convolutiontype.PNG "Convolution Types")
+
 ## Requirements
 Python >= 3.0
 
@@ -34,13 +45,6 @@ Example:
 python3 cnn-train-midfusion-2d.py 1a 3
 ```
 which results in a feature-level fusion (**midfusion**) network with **2D** convolutions using Unipen **1a** (digits) with a convolution size of (**3**, 1)
-
-## Model Details
-
-### Network Type
-
-### Convolution Type
-
 
 ## Citation
 
