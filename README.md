@@ -31,6 +31,18 @@ scikit-learn 0.19.1 (for test files only)
 
 ## How to Use
 
+### Step 1 - Generate Datasets:
+
+Included in the repository are the Unipen 1a, 1b, and 1c datasets. 
+
+To train the models, first you need to generate the DTW features.
+
+```
+python3 generate_dataset.py
+```
+
+### Step 2 - Train:
+
 To train a network use:
 
 ```
@@ -52,6 +64,15 @@ Example:
 python3 cnn-train-midfusion-2d.py 1a 3
 ```
 which results in a feature-level fusion (**midfusion**) network with **2D** convolutions using Unipen **1a** (digits) with a convolution size of (**3**, 1)
+
+### Step 3 - Test:
+
+Same parameters as train
+
+Example:
+```
+python3 cnn-**test**-midfusion-2d.py 1a 3
+```
 
 ## Citation
 
