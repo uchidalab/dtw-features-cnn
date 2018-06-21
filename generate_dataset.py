@@ -92,7 +92,7 @@ if __name__ == "__main__":
                 # write files 
                 writer_test_dtw.writerow(features.reshape(50*proto_number))
                 writer_test_combined.writerow(np.append(local_sample.reshape(50*2), features.reshape(50*proto_number)))
-        exit()
+
         # train set
         with open(train_dtw_fileloc, 'w') as train_dtw_file, open(train_combined_fileloc, 'w') as train_combined_file:
             writer_train_dtw = csv.writer(train_dtw_file, quoting=csv.QUOTE_NONE, delimiter=" ")
