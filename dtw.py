@@ -50,11 +50,11 @@ def fast_dtw(base_list, test_list, extended = False):
 
         DTW[0, 0] = 0.0
         cost = np.zeros((b, t))
-        for i in xrange(b):
+        for i in range(b):
             cost[i]=np.linalg.norm(test_list - base_list[i], axis=1)
-        for i in xrange(1,b):
+        for i in range(1,b):
             DTW[i,1] = cost[i,1] + min(DTW[i - 1, 0], DTW[i - 1, 1])
-            for j in xrange(2,t):
+            for j in range(2,t):
                 DTW[i,j] = cost[i,j] + min(DTW[i - 1, j - 2], DTW[i - 1, j - 1], DTW[i - 1, j])
     if (extended):
         return DTW[b - 1, t - 1], cost, DTW, _traceback(DTW)
