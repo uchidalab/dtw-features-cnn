@@ -68,10 +68,10 @@ if __name__ == "__main__":
         # sorts the prototypes for our benefit, no actual effect on anything
         proto_loc[::-1].sort()
 
-        # remove prototypes from training data
-        for pl in proto_loc:
-            train_data = np.delete(train_data, pl, 0)
-            train_labels = np.delete(train_labels, pl, 0)
+        # # remove prototypes from training data
+        # for pl in proto_loc:
+        #     train_data = np.delete(train_data, pl, 0)
+        #     train_labels = np.delete(train_labels, pl, 0)
 
         # start generation
         test_dtw_fileloc = os.path.join("data", "dtw_features-50-test-data-" + version + ".txt")
