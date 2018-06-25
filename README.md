@@ -71,7 +71,7 @@ Same parameters as train
 
 Example:
 ```
-python3 cnn-**test**-midfusion-2d.py 1a 3
+python3 cnn-test-midfusion-2d.py 1a 3
 ```
 
 ## Citation
