@@ -69,9 +69,9 @@ class DataSet(object):
         return self._images[start:end], self._labels[start:end]
 
 
-def load_data_from_pickle(data_file, image_shape):
+def load_data_from_pickle(data_file, label_file, image_shape):
     import pickle
-
+    print(data_file)
     output = open(data_file, 'rb')
     labels = pickle.load(output)
     images = pickle.load(output)
@@ -80,8 +80,7 @@ def load_data_from_pickle(data_file, image_shape):
     return images, labels
 
 def load_data(data_file, label_file, image_shape, onehot):
-    print('data pass')
-
+    print(data_file)
     images = np.genfromtxt(data_file, delimiter=' ')
     labels = np.genfromtxt(label_file, usecols=(1), delimiter=' ')
     if onehot:
@@ -89,9 +88,8 @@ def load_data(data_file, label_file, image_shape, onehot):
 
     return images, labels
 
-def load_data_from_file(data_file, label_file, image_shape):
-    print('data pass')
-
+def load_data_from_file(data_file, label_file, image_shape, onehot):
+    print(data_file)
     labelsall = np.genfromtxt(label_file, delimiter=' ', dtype=None)
     labelsshape = np.shape(labelsall)
     
@@ -107,25 +105,47 @@ def load_data_from_file(data_file, label_file, image_shape):
        if count % 1000 == 0:
            print(count)
        count += 1
-    labels = dense_to_one_hot(labels.astype(int))
+    if onehot:
+       labels = dense_to_one_hot(labels.astype(int))
 
     return images, labels
 
-def read_data_sets(train_file, test_file, shape, train_label="", test_label="", validation_ratio=0.0, pickle=True, boring=False, onehot=False):
+def read_data_sets(train_file, train_label, shape, test_file="", test_label="", test_ratio=0.1, validation_ratio=0.0, pickle=True, boring=False, onehot=False):
     class DataSets(object):
         pass
 
     data_sets = DataSets()
 
     if (pickle):
-        test_images, test_labels = load_data_from_pickle(test_file, shape)
-        train_images, train_labels = load_data_from_pickle(train_file, shape)
+        train_images, train_labels = load_data_from_pickle(train_file, train_label, shape)
+        if test_file:
+            test_images, test_labels = load_data_from_pickle(test_file, test_label, shape)
+        else:
+            test_size = int(test_ratio * float(train_labels.shape[0]))
+            test_images = train_images[:test_size]
+            test_labels = train_labels[:test_size]
+            train_images = train_images[test_size:]
+            train_labels = train_labels[test_size:]
     elif(boring):
-        test_images, test_labels = load_data_from_file(test_file, test_label, shape)
-        train_images, train_labels = load_data_from_file(train_file, train_label, shape)
+        train_images, train_labels = load_data_from_file(train_file, train_label, shape, onehot)
+        if test_file:
+            test_images, test_labels = load_data_from_file(test_file, test_label, shape, onehot)
+        else:
+            test_size = int(test_ratio * float(train_labels.shape[0]))
+            test_images = train_images[:test_size]
+            test_labels = train_labels[:test_size]
+            train_images = train_images[test_size:]
+            train_labels = train_labels[test_size:]
     else:
-        test_images, test_labels = load_data(test_file, test_label, shape, onehot)
         train_images, train_labels = load_data(train_file, train_label, shape, onehot)
+        if test_file:
+            test_images, test_labels = load_data(test_file, test_label, shape, onehot)
+        else:
+            test_size = int(test_ratio * float(train_labels.shape[0]))
+            test_images = train_images[:test_size]
+            test_labels = train_labels[:test_size]
+            train_images = train_images[test_size:]
+            train_labels = train_labels[test_size:]
 
     validation_size = int(validation_ratio * float(train_labels.shape[0]))
     validation_images = train_images[:validation_size]

@@ -125,15 +125,15 @@ def main(argv):
 
     print(run_name)
 
-    data_sets1 = input_data.read_data_sets(ns.TEST_FILE1, ns.TEST_FILE1, ns.IMAGE_SHAPE1, train_label=ns.TEST_LABEL1,
-                                           test_label=ns.TEST_LABEL1, validation_ratio=0.0, pickle=False, boring=False)
+    data_sets1 = input_data.read_data_sets(ns.TEST_FILE1, ns.TEST_LABEL1, ns.IMAGE_SHAPE1, test_file=ns.TEST_FILE1,
+                                          test_label=ns.TEST_LABEL1, validation_ratio=0.0, pickle=False, boring=False)
     train_data1 = data_sets1.train.images  # Returns np.array
     train_labels = np.asarray(data_sets1.train.labels, dtype=np.int32)
     eval_data1 = data_sets1.test.images  # Returns np.array
     eval_labels = np.asarray(data_sets1.test.labels, dtype=np.int32)
 
-    data_sets2 = input_data.read_data_sets(ns.TEST_FILE2, ns.TEST_FILE2, ns.IMAGE_SHAPE2, train_label=ns.TEST_LABEL2,
-                                           test_label=ns.TEST_LABEL2, validation_ratio=0.0, pickle=False, boring=False)
+    data_sets2 = input_data.read_data_sets(ns.TEST_FILE2, ns.TEST_LABEL2, ns.IMAGE_SHAPE2, test_file=ns.TEST_FILE2,
+                                          test_label=ns.TEST_LABEL2, validation_ratio=0.0, pickle=False, boring=False)
     train_data2 = data_sets2.train.images  # Returns np.array
     eval_data2 = data_sets2.test.images  # Returns np.array
     # print(np.reshape(eval_data[0], (50,50))[0,:])
