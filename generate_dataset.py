@@ -38,12 +38,12 @@ if __name__ == "__main__":
         proto_number = proto_factor * no_classes
         # print(proto_number)
 
-        train_data = (data_sets.train.images.reshape((-1, 50, 2)) + 1. ) * (127.5 / 127.)   # this input_data assumes images
+        train_data = (data_sets.train.images.reshape((-1, 50, 2)) + 1. ) * (255. / 127.)   # this input_data assumes images
         train_labels = data_sets.train.labels
 
         train_number = np.shape(train_labels)[0]
 
-        test_data = (data_sets.test.images.reshape((-1, 50, 2)) + 1.) * (127.5 / 127.)  # this input_data assumes images
+        test_data = (data_sets.test.images.reshape((-1, 50, 2)) + 1.) * (255. / 127.)  # this input_data assumes images
         test_labels = data_sets.test.labels
         test_number = np.shape(test_labels)[0]
 
