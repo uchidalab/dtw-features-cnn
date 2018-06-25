@@ -46,10 +46,11 @@ python3 generate_dataset.py
 To train a network use:
 
 ```
-python3 cnn-train-[raw|dtwfeatures|earlyfusion|midfusion|latefusion]-[1d|2d].py [dataset] [conv width]
+python3 cnn-[raw|dtwfeatures|earlyfusion|midfusion|latefusion].py [test|train] [dataset] [1d|2d] [conv width]
 ```
 Where,
 * **\[raw|dtwfeatures|earlyfusion|midfusion|latefusion]** refers to the [Network Type](#network-type)
+* **\[test|train]** train the network or test the network.
 * **\[1d|2d]** is [1D or 2D Convolutions](#convolution-type)
 * **\[dataset]** is either "1a", "1b", or "1c" and refers to the Unipen dataset. 
   * 1a: digits
@@ -61,7 +62,7 @@ Where,
 
 Example:
 ```
-python3 cnn-train-midfusion-2d.py 1a 3
+python3 cnn-midfusion.py train 1a 2d 3
 ```
 which results in a feature-level fusion (**midfusion**) network with **2D** convolutions using Unipen **1a** (digits) with a convolution size of (**3**, 1)
 
@@ -71,7 +72,7 @@ Same parameters as train
 
 Example:
 ```
-python3 cnn-test-midfusion-2d.py 1a 3
+python3 cnn-midfusion.py test 1a 2d 3
 ```
 
 ## Citation
