@@ -71,10 +71,10 @@ if __name__ == "__main__":
             train_labels = np.delete(train_labels, pl, 0)
 
         # start generation
-        test_dtw_fileloc = os.path.join("data","data_features-50-test-data-"+version+".txt")
-        test_combined_fileloc = os.path.join("data","data_features-50-plus-raw-test-data-"+version+".txt")
-        train_dtw_fileloc = os.path.join("data","data_features-50-train-data-"+version+".txt")
-        train_combined_fileloc = os.path.join("data","data_features-50-plus-raw-train-data-"+version+".txt")
+        test_dtw_fileloc = os.path.join("data","dtw_features-50-test-data-"+version+".txt")
+        test_combined_fileloc = os.path.join("data","dtw_features-50-plus-raw-test-data-"+version+".txt")
+        train_dtw_fileloc = os.path.join("data","dtw_features-50-train-data-"+version+".txt")
+        train_combined_fileloc = os.path.join("data","dtw_features-50-plus-raw-train-data-"+version+".txt")
 
         # test set
         with open(test_dtw_fileloc, 'w') as test_dtw_file, open(test_combined_fileloc, 'w') as test_combined_file:
