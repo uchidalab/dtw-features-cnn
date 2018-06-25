@@ -233,9 +233,6 @@ def main(argv):
 
     if test == "train":
         # train
-        # Create the Estimator
-        classifier = tf.estimator.Estimator(
-            model_fn=cnn_model_fn, model_dir="models/" + run_name)
 
         # Set up logging for predictions
         # Log the values in the "Softmax" tensor with label "probabilities"
