@@ -59,7 +59,7 @@ def fast_dtw(base_list, test_list, extended=False):
     if (extended):
         return DTW[b - 1, t - 1], cost, DTW, _traceback(DTW)
     else:
-        return DTW[b - 1, t - 1], DTW
+        return DTW[b - 1, t - 1]
 
 
 def dtw(base_list, test_list, extended=False, fastdtw=True):

@@ -19,6 +19,8 @@ def get_dtwfeatures(proto_data, proto_number, local_sample):
             features[f, prototype] = cost[path[0][f]][path[1][f]]
     return features
 
+def read_dtw_matrix(version):
+    return np.genfromtxt(os.path.join("data", version+"-dtw_matrix.txt"), delimiter=' ')
 
 def random_selection(proto_number):
     # gets random prototypes
@@ -27,24 +29,27 @@ def random_selection(proto_number):
 
 def random_c_selection(proto_number, train_labels, no_classes):
     # gets random prototypes with equal class distribution
-    proto_loc = np.zeros(proto_number, dtype=np.int8)
-    class_count = np.zeros(no_classes)
+    proto_loc = np.zeros(0, dtype=np.int8)
     proto_factor = int(proto_number / no_classes)
-    train_number = np.shape(train_labels)[0]
-    for tr in range(train_number):
-        cla = int(train_labels[tr])
-        if class_count[cla] < proto_factor:
-            ind = int((cla * proto_factor) + class_count[cla])
-            proto_loc[ind] = int(tr)
-            class_count[cla] += 1
+    for c in range(no_classes):
+        classwise = np.where(train_labels==c)[0]
+        cw_random = random_selection(proto_factor)
+        proto_loc = np.append(proto_loc, classwise[cw_random])
     return proto_loc
 
+def center_selection(proto_number, distances):
+    # gets the center prototypes
+    return np.argpartition(np.sum(distances, axis=1), -proto_number)[-proto_number:]
 
-def center_selection(train_data, train_labels, proto_number, no_classes):
-    pass
-
-def center_c_selection(train_data, train_labels, proto_number, no_classes):
-    pass
+def center_c_selection(proto_number, train_labels, no_classes, distances):
+    # gets the classwise center prototypes
+    proto_loc = np.zeros(0, dtype=np.int8)
+    proto_factor = int(proto_number / no_classes)
+    for c in range(no_classes):
+        classwise = np.where(train_labels==c)[0]
+        cw_centers = center_selection(proto_factor, distances[classwise])
+        proto_loc = np.append(proto_loc, classwise[cw_centers])
+    return proto_loc
 
 def border_selection(train_data, train_labels, proto_number, no_classes):
     pass
@@ -92,7 +97,17 @@ if __name__ == "__main__":
     test_labels = data_sets.test.labels
     test_number = np.shape(test_labels)[0]
 
-    proto_loc = random_c_selection(proto_number, train_labels, no_classes)
+    distances = read_dtw_matrix(version)
+
+    if selection == "randomc":
+        proto_loc = random_c_selection(proto_number, train_labels, no_classes)
+    elif selection == "center":
+        proto_loc = center_selection(proto_number, distances)
+    elif selection == "centerc":
+        proto_loc = center_c_selection(proto_number, train_labels, no_classes, distances)
+    else:
+        proto_loc = random_selection(proto_number)
+    proto_loc = center_selection(proto_number)
     proto_data = train_data[proto_loc]
     print("Selection Done.")
 
