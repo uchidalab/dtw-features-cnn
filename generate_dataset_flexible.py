@@ -26,53 +26,100 @@ def random_selection(proto_number):
     # gets random prototypes
     return np.arange(proto_number)
 
-
-def random_c_selection(proto_number, train_labels, no_classes):
-    # gets random prototypes with equal class distribution
-    proto_loc = np.zeros(0, dtype=np.int8)
-    proto_factor = int(proto_number / no_classes)
-    for c in range(no_classes):
-        classwise = np.where(train_labels==c)[0]
-        cw_random = random_selection(proto_factor)
-        proto_loc = np.append(proto_loc, classwise[cw_random])
-    return proto_loc
-
 def center_selection(proto_number, distances):
     # gets the center prototypes
-    return np.argpartition(np.sum(distances, axis=1), -proto_number)[-proto_number:]
+    return np.argsort(np.sum(distances, axis=1))[:proto_number]
 
-def center_c_selection(proto_number, train_labels, no_classes, distances):
-    # gets the classwise center prototypes
-    proto_loc = np.zeros(0, dtype=np.int8)
-    proto_factor = int(proto_number / no_classes)
-    for c in range(no_classes):
-        classwise = np.where(train_labels==c)[0]
-        cw_centers = center_selection(proto_factor, distances[classwise])
-        proto_loc = np.append(proto_loc, classwise[cw_centers])
+def border_selection(proto_number, distances):
+    # gets the border prototypes
+    return np.argsort(np.sum(distances, axis=1))[::-1][:proto_number]
+
+def spanning_selection(proto_number, distances):
+    # gets the spanning prototypes
+    proto_loc = center_selection(1, distances)
+    choice_loc = np.delete(np.arange(np.shape(distances)[0]), proto_loc, 0)
+    for iter in range(proto_number-1):
+        d = distances[choice_loc]
+        p = np.array([choice_loc[np.argmax(np.min(d[:,proto_loc], axis=1))]])
+        proto_loc = np.append(proto_loc, p)
+        choice_loc = np.delete(choice_loc, p, 0)
     return proto_loc
 
-def border_selection(train_data, train_labels, proto_number, no_classes):
-    pass
+def k_centers_selection(proto_number, distances):
+    # finds k centers
+    no_possible = np.shape(distances)[0]
 
+    # initialize with spanning
+    proto_loc = spanning_selection(proto_number, distances)
+    for iter in range(1000):
+        # assign every point into a group with the centers
+        membership = np.zeros(no_possible, dtype=np.int32)
+        for i, d in enumerate(distances):
+            membership[i] = proto_loc[np.argmin(d[proto_loc])]
 
-def border_c_selection(train_data, train_labels, proto_number, no_classes):
-    pass
+        # find center of groups
+        was_change = False
+        for i, p in enumerate(proto_loc):
+            p_group = np.where(membership==p)[0]
+            new_center = p_group[center_selection(1, distances[p_group])][0]
+            if new_center != p:
+                proto_loc[i] = new_center
+                was_change = True
+        if was_change == False:
+            print("stopping at {}".format(iter))
+            break
+    return proto_loc
 
-def k_medians_selection(train_data, train_labels, proto_number, no_classes):
-    pass
+def k_medoids_selection(proto_number, distances):
+    # A simple and fast algorithm for K-medoids clustering
+    no_possible = np.shape(distances)[0]
 
+    # initialize using v_j = \sum^n_{i=1}{\frac{d_{ij}{\sum^n_{l=1}{d_{il}}}}
+    sums = np.sum(distances, axis=1)
+    ratings = np.zeros(no_possible)
+    for c in np.arange(no_possible):
+        ratings[c] = np.sum(distances[c] / sums)
+    proto_loc = np.argsort(ratings)[:proto_number]
 
-def k_medians_c_selection(train_data, train_labels, proto_number, no_classes):
-    pass
+    for iter in range(1000):
+        # assign every point into a group with the centers
+        membership = np.zeros(no_possible, dtype=np.int32)
+        for i, d in enumerate(distances):
+            membership[i] = proto_loc[np.argmin(d[proto_loc])]
+        # find center of groups
+        proto_sum = np.sum(distances[proto_loc])
+        for i, p in enumerate(proto_loc):
+            p_group = np.where(membership==p)[0]
+            proto_loc[i] = p_group[center_selection(1, distances[p_group])][0]
+        if proto_sum == np.sum(distances[proto_loc]):
+            print("stopping at {}".format(iter))
+            break
+    return proto_loc
 
+def selector_selector(selection, proto_number, distances):
+    if selection == "random":
+        return random_selection(proto_number)
+    elif selection == "centers":
+        return center_selection(proto_number, distances)
+    elif selection == "borders":
+        return border_selection(proto_number, distances)
+    elif selection == "spanning":
+        return spanning_selection(proto_number, distances)
+    elif selection == "kmedoids":
+        return k_medoids_selection(proto_number, distances)
+    elif selection == "kcenters":
+        return k_centers_selection(proto_number, distances)
+    else:
+        return random_selection(proto_number)
 
 if __name__ == "__main__":
-    if len(sys.argv) < 4:
-        print("Error, Syntax: {0} [version] [prototype selection] [prototype number]".format(sys.argv[0]))
+    if len(sys.argv) < 5:
+        print("Error, Syntax: {0} [version] [prototype selection] [classwise/independent] [prototype number]".format(sys.argv[0]))
         exit()
     version = sys.argv[1]
     selection = sys.argv[2]
-    proto_number = int(sys.argv[3])
+    classwise = sys.argv[3]
+    proto_number = int(sys.argv[4])
 
     print("Starting: {}".format(version))
 
@@ -89,7 +136,7 @@ if __name__ == "__main__":
 
     train_data = (data_sets.train.images.reshape((-1, 50, 2)) + 1.) * (
             127.5 / 127.)  # this input_data assumes images
-    train_labels = data_sets.train.labels
+    train_labels = data_sets.train.labels[:200]
 
     train_number = np.shape(train_labels)[0]
 
@@ -99,16 +146,21 @@ if __name__ == "__main__":
 
     distances = read_dtw_matrix(version)
 
-    if selection == "randomc":
-        proto_loc = random_c_selection(proto_number, train_labels, no_classes)
-    elif selection == "center":
-        proto_loc = center_selection(proto_number, distances)
-    elif selection == "centerc":
-        proto_loc = center_c_selection(proto_number, train_labels, no_classes, distances)
+    if classwise == "classwise":
+        proto_loc = np.zeros(0, dtype=np.int32)
+        proto_factor = int(proto_number / no_classes)
+        for c in range(no_classes):
+            cw = np.where(train_labels == c)[0]
+            cw_distances = distances[cw]
+            cw_distances = cw_distances[:,cw]
+            cw_proto = selector_selector(selection, proto_factor, cw_distances)
+            proto_loc = np.append(proto_loc, cw[cw_proto])
     else:
-        proto_loc = random_selection(proto_number)
-    proto_loc = center_selection(proto_number)
+        proto_loc = selector_selector(selection, proto_number, distances)
+
     proto_data = train_data[proto_loc]
+    print(proto_loc)
+    exit()
     print("Selection Done.")
 
     # sorts the prototypes so deletion happens in reverse order and doesn't interfere with indices
