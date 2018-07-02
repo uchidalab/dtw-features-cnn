@@ -4,9 +4,10 @@ import numpy as np
 import input_data
 import network_settings as ns
 import os
+import csv
 
 
-version = "1a"
+version = "1c"
 # load settings
 ns.load_settings_raw(version, "1d")
 full_data_file = os.path.join("data", version + "-re-data.txt")
@@ -22,12 +23,16 @@ train_data = (data_sets.train.images.reshape((-1, 50, 2)) + 1.) * (127.5 / 127.)
 train_labels = data_sets.train.labels
 
 train_number = np.shape(train_labels)[0]
-dtw_matrix = np.zeros((train_number, train_number))
+#dtw_matrix = np.zeros((train_number, train_number))
+fileloc = os.path.join("data", version + "-dtw-matrix.txt")
 
-for t1 in range(train_number):
-    for t2 in range(train_number):
-        dtw_matrix[t1, t2] = dtw.dtw(train_data[t1], train_data[t2], extended=False)
-    if t1 % 1000 == 0:
+with open(fileloc, 'w') as file:
+    writer = csv.writer(file, quoting=csv.QUOTE_NONE, delimiter=" ")
+    for t1 in range(train_number):
+        writeline = np.zeros((train_number))
+        for t2 in range(train_number):
+            writeline[t2] = dtw.dtw(train_data[t1], train_data[t2], extended=False)
+        writer.writerow(writeline)
         print(t1)
 
-np.savetxt(os.path.join("data", "{}_dtw_matrix.txt".format(version)), dtw_matrix, delimiter=' ')
+#np.savetxt(os.path.join("data", "{}_dtw_matrix.txt".format(version)), dtw_matrix, delimiter=' ')
