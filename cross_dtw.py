@@ -30,4 +30,4 @@ for t1 in range(train_number):
     if t1 % 1000 == 0:
         print(t1)
 
-np.savetxt(os.path.join("data", "dtw_matrix.txt"), dtw_matrix, delimiter=' ')
+np.savetxt(os.path.join("data", "{}_dtw_matrix.txt".format(version)), dtw_matrix, delimiter=' ')
