@@ -94,7 +94,7 @@ if __name__ == "__main__":
                 # set the range from 0-255 for the input_data file (the input_data file was made for images and changes it back down to -1 to 1
                 features = features * 255.
                 local_sample = local_sample * 255.
-                class_value = np.argmax(test_labels[sample])
+                class_value = test_labels[sample]
 
                 # write files
                 feature_flat = features.reshape(50 * proto_number)
@@ -119,7 +119,7 @@ if __name__ == "__main__":
                 # set the range from 0-255 for the input_data file (the input_data file was made for images and changes it back down to -1 to 1
                 features = features * 255.
                 local_sample = local_sample * 255.
-                class_value = np.argmax(train_labels[sample])
+                class_value = train_labels[sample]
 
                 # write files
                 feature_flat = features.reshape(50 * proto_number)
