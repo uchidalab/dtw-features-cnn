@@ -134,7 +134,7 @@ def load_settings_mid(dataset, dimen):
 	global MPOOL_SHAPE
 
 	TRAINING_FILE1 = "data/raw-train-data-{0}.txt".format(dataset)
-	TEST_FILE1 = "data/raw-test-data-1b.txt"
+	TEST_FILE1 = "data/raw-test-data-{0}.txt".format(dataset)
 	TRAINING_LABEL1 = "data/train-label-{0}.txt".format(dataset)
 	TEST_LABEL1 = "data/test-label-{0}.txt".format(dataset)
 
@@ -189,7 +189,7 @@ def load_settings_late(dataset, dimen):
 	global MPOOL_SHAPE
 
 	TRAINING_FILE1 = "data/raw-train-data-{0}.txt".format(dataset)
-	TEST_FILE1 = "data/raw-test-data-1b.txt"
+	TEST_FILE1 = "data/raw-test-data-{0}.txt".format(dataset)
 	TRAINING_LABEL1 = "data/train-label-{0}.txt".format(dataset)
 	TEST_LABEL1 = "data/test-label-{0}.txt".format(dataset)
 
